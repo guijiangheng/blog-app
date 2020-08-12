@@ -30,4 +30,12 @@ export class UserService {
   async getAllUsers(): Promise<UserRO[]> {
     return this.userRepository.find();
   }
+
+  async getUserByEmail(email: string): Promise<UserEntity> {
+    return this.userRepository.findOne({ where: { email } });
+  }
+
+  async getUserById(userId: string): Promise<UserEntity> {
+    return this.userRepository.findOne(userId);
+  }
 }
