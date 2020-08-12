@@ -8,7 +8,7 @@ import {
 } from '@nestjs/swagger';
 import { Request } from 'express';
 
-import { UserRO } from './../user/dto/user.dto';
+import { UserEntity } from '../user/user.entity';
 import { ArticleService } from './article.service';
 import { CreateArticleRO } from './dto/create-article-ro.dto';
 import { CreateArticleDto } from './dto/create-article.dto';
@@ -27,7 +27,7 @@ export class ArticleController {
     @Body() createArticleDto: CreateArticleDto,
     @Req() req: Request,
   ): Promise<CreateArticleRO> {
-    const author = req.user as UserRO;
+    const author = req.user as UserEntity;
     return this.articleService.createArticle(author, createArticleDto);
   }
 }

@@ -9,6 +9,7 @@ import { JwtService } from '@nestjs/jwt';
 import { verify } from 'argon2';
 
 import { UserRO } from '../user/dto/user.dto';
+import { UserEntity } from '../user/user.entity';
 import { UserService } from '../user/user.service';
 
 @Injectable()
@@ -19,7 +20,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async validateUser(email: string, password: string): Promise<UserRO> {
+  async validateUser(email: string, password: string): Promise<UserEntity> {
     const user = await this.userService.getUserByEmail(email);
 
     if (!user) {
@@ -29,8 +30,6 @@ export class AuthService {
     if (!(await verify(user.password, password))) {
       throw new UnauthorizedException('密码错误');
     }
-
-    delete user.password;
 
     return user;
   }

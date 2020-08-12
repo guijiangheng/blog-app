@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { UserRO } from './../user/dto/user.dto';
+import { UserEntity } from '../user/user.entity';
 import { UserService } from './../user/user.service';
 import { ArticleEntity } from './article.entity';
 import { CreateArticleDto } from './dto/create-article.dto';
@@ -16,11 +16,11 @@ export class ArticleService {
   ) {}
 
   async createArticle(
-    { id: authorId }: UserRO,
+    author: UserEntity,
     createArticleDto: CreateArticleDto,
   ): Promise<ArticleEntity> {
     const article = new ArticleEntity(createArticleDto);
-    article.author = await this.userService.getUserById(authorId);
+    article.author = author;
     return await this.articleRepository.save(article);
   }
 }
