@@ -1,7 +1,14 @@
+import { hash } from 'argon2';
 import { Exclude } from 'class-transformer';
-import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  BeforeInsert,
+  Column,
+  Entity,
+  Index,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
-@Entity()
+@Entity('user')
 export class UserEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -16,6 +23,11 @@ export class UserEntity {
   @Column()
   @Exclude()
   password: string;
+
+  @BeforeInsert()
+  async hashPassword() {
+    this.password = await hash(this.password);
+  }
 
   constructor(partial?: Partial<UserEntity>) {
     Object.assign(this, partial);

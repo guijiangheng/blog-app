@@ -6,6 +6,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { verify } from 'argon2';
 
 import { UserRO } from '../user/dto/user.dto';
 import { UserService } from '../user/user.service';
@@ -25,7 +26,7 @@ export class AuthService {
       throw new NotFoundException('用户不存在');
     }
 
-    if (user.password !== password) {
+    if (!(await verify(user.password, password))) {
       throw new UnauthorizedException('密码错误');
     }
 

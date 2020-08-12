@@ -1,6 +1,6 @@
 import { Controller, Post, Req, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiBody, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
 
 import { UserRO } from '../user/dto/user.dto';
@@ -13,10 +13,11 @@ import { LoginDto } from './dto/login.dto';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @UseGuards(AuthGuard('local'))
+  @ApiOperation({ summary: '登录' })
   @ApiBody({ type: LoginDto })
   @ApiOkResponse({ type: LoginRO })
   @Post('login')
+  @UseGuards(AuthGuard('local'))
   login(@Req() req: Request): LoginRO {
     const user = req.user as UserRO;
     return {
