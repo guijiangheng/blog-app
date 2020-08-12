@@ -17,19 +17,22 @@ export class AuthService {
 
   async validateUser(email: string, password: string): Promise<UserRO> {
     const user = await this.userService.getUserByEmail(email);
+
     if (!user) {
       throw new NotFoundException('用户不存在');
     }
+
     if (user.password !== password) {
       throw new UnauthorizedException('密码错误');
     }
+
+    delete user.password;
+
     return user;
   }
 
-  login(user: UserRO): { token: string } {
-    const { id: sub, email, username } = user;
-    return {
-      token: this.jwtService.sign({ sub, email, username }),
-    };
+  sign(user: UserRO): string {
+    const { id, email, username } = user;
+    return this.jwtService.sign({ id, email, username });
   }
 }

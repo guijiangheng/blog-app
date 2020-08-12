@@ -16,6 +16,7 @@ export class UserService {
   async create(createUserDto: CreateUserDto): Promise<UserRO> {
     const { email, username, password } = createUserDto;
     const user = await this.userRepository.findOne({ where: { email } });
+
     if (user) {
       throw new BadRequestException('邮箱被占用');
     }
@@ -25,6 +26,7 @@ export class UserService {
       username,
       password,
     });
+
     return await this.userRepository.save(newUser);
   }
 
@@ -36,7 +38,7 @@ export class UserService {
     return this.userRepository.findOne({ where: { email } });
   }
 
-  async getUserById(userId: string): Promise<UserEntity> {
+  async getUserById(userId: string): Promise<UserRO> {
     return this.userRepository.findOne(userId);
   }
 }
