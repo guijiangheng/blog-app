@@ -5,8 +5,11 @@ import {
   Column,
   Entity,
   Index,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+
+import { ArticleEntity } from '../article/article.entity';
 
 @Entity('user')
 export class UserEntity {
@@ -23,6 +26,12 @@ export class UserEntity {
   @Column()
   @Exclude()
   password: string;
+
+  @OneToMany(
+    () => ArticleEntity,
+    article => article.author,
+  )
+  articles: ArticleEntity[];
 
   @BeforeInsert()
   async hashPassword() {

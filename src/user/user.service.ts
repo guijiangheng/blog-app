@@ -10,7 +10,6 @@ import { Repository } from 'typeorm';
 import { AuthService } from './../auth/auth.service';
 import { LoginRO } from './../auth/dto/login-ro.dto';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UserRO } from './dto/user.dto';
 import { UserEntity } from './user.entity';
 
 @Injectable()
@@ -44,7 +43,7 @@ export class UserService {
     return this.userRepository.findOne({ where: { email } });
   }
 
-  async getUserById(userId: string): Promise<UserRO> {
+  async getUserById(userId: string): Promise<UserEntity> {
     return this.userRepository.findOne(userId);
   }
 }
