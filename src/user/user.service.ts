@@ -20,11 +20,11 @@ export class UserService {
       throw new BadRequestException('邮箱被占用');
     }
 
-    const newUser = new UserEntity();
-    newUser.email = email;
-    newUser.username = username;
-    newUser.password = password;
-
+    const newUser = new UserEntity({
+      email,
+      username,
+      password,
+    });
     return await this.userRepository.save(newUser);
   }
 
