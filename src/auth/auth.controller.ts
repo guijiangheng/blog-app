@@ -1,8 +1,9 @@
-import { Controller, UseGuards, Post, Body } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Post, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { AuthService } from './auth.service';
+import { ApiTags } from '@nestjs/swagger';
+
 import { UserRO } from '../user/dto/user.dto';
+import { AuthService } from './auth.service';
 
 @ApiTags('auth')
 @Controller('auth')

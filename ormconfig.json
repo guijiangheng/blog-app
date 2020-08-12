@@ -2,8 +2,8 @@
   "type": "postgres",
   "host": "localhost",
   "port": 5432,
-  "username": "gui",
-  "password": "123456",
+  "username": "postgres",
+  "password": "postgres",
   "database": "blog-app",
   "synchronize": true,
   "entities": ["dist/**/**.entity{.ts,.js}"]
