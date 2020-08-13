@@ -7,6 +7,8 @@ import {
   Index,
   OneToMany,
   PrimaryGeneratedColumn,
+  ManyToMany,
+  JoinTable,
 } from 'typeorm';
 
 import { ArticleEntity } from '../article/article.entity';
@@ -37,6 +39,21 @@ export class UserEntity {
     article => article.author,
   )
   articles: ArticleEntity[];
+
+  @ApiProperty({ type: [UserEntity] })
+  @ManyToMany(
+    () => UserEntity,
+    user => user.following,
+  )
+  @JoinTable()
+  followers: UserEntity[];
+
+  @ApiProperty({ type: [UserEntity] })
+  @ManyToMany(
+    () => UserEntity,
+    user => user.followers,
+  )
+  following: UserEntity[];
 
   @BeforeInsert()
   async hashPassword() {

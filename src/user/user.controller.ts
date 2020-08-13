@@ -49,4 +49,17 @@ export class UserController {
   async getUserProfile(@Param('userId') userId: string): Promise<UserEntity> {
     return this.userService.getUserProfile(userId);
   }
+
+  @ApiOperation({ summary: '关注用户' })
+  @ApiOkResponse({ type: UserEntity })
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
+  @Post('users/:userId/follow')
+  async followUser(
+    @Param('userId') userId: string,
+    @Req() req: Request,
+  ): Promise<UserEntity> {
+    const follower = req.user as UserEntity;
+    return this.userService.follow(follower, userId);
+  }
 }
