@@ -6,7 +6,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, UpdateResult } from 'typeorm';
+import { Repository } from 'typeorm';
 
 import { AuthService } from './../auth/auth.service';
 import { LoginRO } from './../auth/dto/login-ro.dto';
@@ -56,6 +56,10 @@ export class UserService {
   }
 
   async follow(follower: UserEntity, followingId: string): Promise<UserEntity> {
+    if (follower.id === followingId) {
+      throw new BadRequestException('不能关注自己');
+    }
+
     const following = await this.userRepository.findOne({
       where: { id: followingId },
       relations: ['followers', 'following', 'articles'],
@@ -70,6 +74,37 @@ export class UserService {
     }
 
     following.followers.push(follower);
+
+    return await this.userRepository.save(following);
+  }
+
+  async unFollow(
+    follower: UserEntity,
+    followingId: string,
+  ): Promise<UserEntity> {
+    if (follower.id === followingId) {
+      throw new BadRequestException('不能取关自己');
+    }
+
+    const following = await this.userRepository.findOne({
+      where: { id: followingId },
+      relations: ['followers', 'following', 'articles'],
+    });
+
+    if (!following) {
+      throw new NotFoundException('被关注着不存在');
+    }
+
+    const isFollowing = following.followers
+      .map(user => user.id)
+      .includes(follower.id);
+    if (!isFollowing) {
+      throw new BadRequestException('你还未关注该用户');
+    }
+
+    following.followers = following.followers.filter(
+      user => user.id !== follower.id,
+    );
 
     return await this.userRepository.save(following);
   }

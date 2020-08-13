@@ -6,6 +6,7 @@ import {
   Req,
   UseGuards,
   Param,
+  Delete,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import {
@@ -61,5 +62,18 @@ export class UserController {
   ): Promise<UserEntity> {
     const follower = req.user as UserEntity;
     return this.userService.follow(follower, userId);
+  }
+
+  @ApiOperation({ summary: '取消关注' })
+  @ApiOkResponse({ type: UserEntity })
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
+  @Delete('users/:userId/follow')
+  async unFollowUser(
+    @Param('userId') userId: string,
+    @Req() req: Request,
+  ): Promise<UserEntity> {
+    const follower = req.user as UserEntity;
+    return this.userService.unFollow(follower, userId);
   }
 }
