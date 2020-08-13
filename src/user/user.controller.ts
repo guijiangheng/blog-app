@@ -33,7 +33,6 @@ export class UserController {
   @ApiBearerAuth()
   @Get('users/current')
   async getCurrentUser(@Req() req: Request): Promise<UserRO> {
-    console.log(req.user);
     return req.user as UserRO;
   }
 

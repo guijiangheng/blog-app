@@ -19,6 +19,19 @@ export class ArticleService {
     private readonly articleRepository: Repository<ArticleEntity>,
   ) {}
 
+  async getArticleById(articleId: string): Promise<ArticleEntity> {
+    const article = await this.articleRepository.findOne({
+      where: { id: articleId },
+      relations: ['author'],
+    });
+
+    if (!article) {
+      throw new NotFoundException('文章不存在');
+    }
+
+    return article;
+  }
+
   async createArticle(
     author: UserEntity,
     createArticleDto: CreateArticleDto,
