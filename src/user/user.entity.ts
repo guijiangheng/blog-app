@@ -10,16 +10,20 @@ import {
 } from 'typeorm';
 
 import { ArticleEntity } from '../article/article.entity';
+import { ApiProperty } from '@nestjs/swagger';
 
 @Entity('user')
 export class UserEntity {
+  @ApiProperty()
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
+  @ApiProperty()
   @Column()
   @Index({ unique: true })
   email: string;
 
+  @ApiProperty()
   @Column()
   username: string;
 
@@ -27,6 +31,7 @@ export class UserEntity {
   @Exclude()
   password: string;
 
+  @ApiProperty({ type: () => [ArticleEntity] })
   @OneToMany(
     () => ArticleEntity,
     article => article.author,

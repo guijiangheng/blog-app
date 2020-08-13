@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Req,
+  UseGuards,
+  Param,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import {
   ApiBearerAuth,
@@ -12,6 +20,7 @@ import { LoginRO } from './../auth/dto/login-ro.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserRO } from './dto/user.dto';
 import { UserService } from './user.service';
+import { UserEntity } from './user.entity';
 
 @ApiTags('user')
 @Controller('')
@@ -24,6 +33,7 @@ export class UserController {
   @ApiBearerAuth()
   @Get('users/current')
   async getCurrentUser(@Req() req: Request): Promise<UserRO> {
+    console.log(req.user);
     return req.user as UserRO;
   }
 
@@ -32,5 +42,12 @@ export class UserController {
   @Post('users')
   async createUser(@Body() createUserDto: CreateUserDto): Promise<LoginRO> {
     return this.userService.create(createUserDto);
+  }
+
+  @ApiOperation({ summary: '获取用户主页信息' })
+  @ApiOkResponse({ type: UserEntity })
+  @Get('users/:userId')
+  async getUserProfile(@Param('userId') userId: string): Promise<UserEntity> {
+    return this.userService.getUserProfile(userId);
   }
 }
